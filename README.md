@@ -11,7 +11,7 @@ sudo apt-get install nlohmann-json3-dev ffmpeg
 sudo pacman -S nlohmann-json3-dev ffmpeg
 
 # Compile with C++17 support.
-g++ -std=c++17 kb-ffmpeg-conv.cpp -o kb-ffmpeg-conv
+g++ -std=c++17 hb-ffmpeg-conv.cpp -o hb-ffmpeg-conv
 
 # Build with Cmake.
 mkdir build && cd build
@@ -22,7 +22,7 @@ cmake --build .
 sudo cmake --install .
 
 # Run the converter.
-./kb-ffmpeg-conv your_preset.json [options]
+./hb-ffmpeg-conv your_preset.json [options]
 
 # Example with the handbrake saved preset provided.
-./kb-ffmpeg-conv hbpreset.json -d
+./hb-ffmpeg-conv hbpreset.json -d

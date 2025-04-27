@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(ffmpeg_converter)
+project(hb-ffmpeg-conv)
 
 # Set C++ standard
 set(CMAKE_CXX_STANDARD 17)
@@ -9,11 +9,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(nlohmann_json QUIET)
 
 # Add the executable
-add_executable(ffmpeg_converter ffmpeg_converter.cpp)
+add_executable(hb-ffmpeg-conv hb-ffmpeg-conv.cpp)
 
 # If nlohmann_json was found as a package, use it
 if(nlohmann_json_FOUND)
-    target_link_libraries(ffmpeg_converter PRIVATE nlohmann_json::nlohmann_json)
+    target_link_libraries(hb-ffmpeg-conv PRIVATE nlohmann_json::nlohmann_json)
 else()
     # If not found, download it at configure time
     include(FetchContent)
@@ -26,4 +26,4 @@ else()
 endif()
 
 # Install
-install(TARGETS ffmpeg_converter DESTINATION bin)
+install(TARGETS hb-ffmpeg-conv DESTINATION bin)
