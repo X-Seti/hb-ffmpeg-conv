@@ -25,4 +25,4 @@ sudo cmake --install .
 ./hb-ffmpeg-conv your_preset.json [options]
 
 # Example with the handbrake saved preset provided.
-./hb-ffmpeg-conv hbpreset.json -d
+./hb-ffmpeg-conv hbpreset.json -p
