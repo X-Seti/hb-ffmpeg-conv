@@ -18,7 +18,7 @@ namespace fs = std::filesystem;
 using json = nlohmann::json;
 
 // Script version
-const std::string SCRIPT_VERSION = "0.8";
+const std::string SCRIPT_VERSION = "0.9";
 
 // Default media extensions
 const std::vector<std::string> MEDIA_EXTENSIONS = {
@@ -150,20 +150,68 @@ Settings extract_preset_settings(const json& preset_data) {
     json audio_list = preset.value("AudioList", json::array());
     json audio_settings = audio_list.size() > 0 ? audio_list[0] : json::object();
 
-    // Fill the settings struct
+    // Fill the settings struct with type-safe accessors
     settings.preset_name = preset.value("PresetName", "");
     settings.video_encoder = preset.value("VideoEncoder", "");
-    settings.video_bitrate = preset.value("VideoAvgBitrate", "");
+
+    // Handle values that could be numbers or strings safely
+    if (preset.contains("VideoAvgBitrate")) {
+        settings.video_bitrate = std::to_string(preset["VideoAvgBitrate"].get<int>());
+    } else {
+        settings.video_bitrate = "0";
+    }
+
     settings.video_preset = preset.value("VideoPreset", "");
     settings.video_profile = preset.value("VideoProfile", "");
-    settings.video_framerate = preset.value("VideoFramerate", "");
-    settings.video_quality = preset.value("VideoQualitySlider", "");
-    settings.video_quality_type = preset.value("VideoQualityType", "");
+
+    if (preset.contains("VideoFramerate")) {
+        if (preset["VideoFramerate"].is_string()) {
+            settings.video_framerate = preset["VideoFramerate"].get<std::string>();
+        } else {
+            settings.video_framerate = std::to_string(preset["VideoFramerate"].get<int>());
+        }
+    } else {
+        settings.video_framerate = "";
+    }
+
+    if (preset.contains("VideoQualitySlider")) {
+        settings.video_quality = std::to_string(preset["VideoQualitySlider"].get<double>());
+    } else {
+        settings.video_quality = "0";
+    }
+
+    if (preset.contains("VideoQualityType")) {
+        if (preset["VideoQualityType"].is_string()) {
+            settings.video_quality_type = preset["VideoQualityType"].get<std::string>();
+        } else {
+            settings.video_quality_type = std::to_string(preset["VideoQualityType"].get<int>());
+        }
+    } else {
+        settings.video_quality_type = "";
+    }
+
     settings.video_multipass = preset.value("VideoMultiPass", false);
-    settings.picture_width = preset.value("PictureWidth", "");
-    settings.picture_height = preset.value("PictureHeight", "");
+
+    if (preset.contains("PictureWidth")) {
+        settings.picture_width = std::to_string(preset["PictureWidth"].get<int>());
+    } else {
+        settings.picture_width = "0";
+    }
+
+    if (preset.contains("PictureHeight")) {
+        settings.picture_height = std::to_string(preset["PictureHeight"].get<int>());
+    } else {
+        settings.picture_height = "0";
+    }
+
     settings.audio_encoder = audio_settings.value("AudioEncoder", "");
-    settings.audio_bitrate = audio_settings.value("AudioBitrate", "");
+
+    if (audio_settings.contains("AudioBitrate")) {
+        settings.audio_bitrate = std::to_string(audio_settings["AudioBitrate"].get<int>());
+    } else {
+        settings.audio_bitrate = "0";
+    }
+
     settings.audio_mixdown = audio_settings.value("AudioMixdown", "");
     settings.container = preset.value("FileFormat", "");
 
